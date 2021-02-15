@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidCompose">
         <activity
+            android:name=".ComplexCustomLayoutActivity"
+            android:label="@string/title_activity_complex_custom_layout"
+            android:theme="@style/Theme.AndroidCompose.NoActionBar"></activity>
+        <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AndroidCompose.NoActionBar">

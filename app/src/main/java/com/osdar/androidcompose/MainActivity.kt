@@ -7,9 +7,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.SnackbarDefaults.backgroundColor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
 import androidx.compose.runtime.mutableStateOf
@@ -18,12 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.osdar.androidcompose.ui.theme.AndroidComposeTheme
 
@@ -32,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApp {
-                MyLayoutContent()
+                LayoutCodeLab()
             }
         }
     }
@@ -42,13 +47,91 @@ class MainActivity : AppCompatActivity() {
     @Composable
     fun PreviewFun() {
         MyApp {
-            MyLayoutContent()
+            LayoutCodeLab()
         }
     }
 
     @Composable
     fun MyApp(content: @Composable () -> Unit) {
-        MyLayoutContent()
+        LayoutCodeLab()
+    }
+
+
+//
+//    @Composable
+//    fun MyOwnColumn(
+//        modifier: Modifier = Modifier,
+//        children: @Composable () -> Unit
+//    ) {
+//
+//        Layout(
+//            modifier = modifier,
+//            children = children
+//        ) { measurables, constraints ->
+//            // Don't constrain child views further, measure them with given constraints
+//            // List of measured children
+//            val placeables = measurables.map { measurable ->
+//                // Measure each children
+//                measurable.measure(constraints)
+//            }
+//
+//            // Track the y co-ord we have placed children up to
+//            var yPosition = 0
+//
+//            // Set the size of the layout as big as it can
+//            layout(constraints.maxWidth, constraints.maxHeight) {
+//                // Place children in the parent layout
+//                placeables.forEach { placeable ->
+//                    // Position item on the screen
+//                    placeable.placeRelative(x = 0, y = yPosition)
+//
+//                    // Record the y co-ord placed up to
+//                    yPosition += placeable.height
+//                }
+//            }
+//        }
+//    }
+
+    private fun Modifier.customLayoutModifier(firstBaselineToTop: Dp) =
+        Modifier.layout { measurable, constraints ->
+            val placeable = measurable.measure(constraints)
+            // Check the composable has a first baseline
+            check(placeable[FirstBaseline] != AlignmentLine.Unspecified)
+            val firstbaseline = placeable[FirstBaseline]
+
+            // Height of the composable with padding - first baseline
+            val placeableY = firstBaselineToTop.toIntPx() - firstbaseline
+            val height = placeable.height + placeableY
+            layout(placeable.width, height) {
+                // Where the composable gets placed
+                placeable.placeRelative(0, placeableY)
+            }
+
+        }
+
+    @Composable
+    fun LayoutCodeLab() {
+        Scaffold(topBar = {
+            TopAppBar(title = {
+                Text(text = "Layout code lab")
+            },
+                actions = {
+                    IconButton(onClick = { }) {
+//                        Icon(Icons.Filled.Favorite)
+                    }
+                })
+        }) { innerPadding ->
+            ScaffoldContent(innerPadding)
+
+        }
+    }
+
+    @Composable
+    private fun ScaffoldContent(innerPadding: PaddingValues) {
+        Row(Modifier.padding(innerPadding)) {
+            Text(text = "Hi there", modifier = Modifier.customLayoutModifier(32.dp))
+            Text(text = "Hi Osama, How are you?", modifier = Modifier.customLayoutModifier(32.dp))
+        }
     }
 
     @Composable
@@ -132,17 +215,17 @@ class MainActivity : AppCompatActivity() {
         val typography = MaterialTheme.typography
         var isSelected = remember { mutableStateOf(false) }
         val backgroundColor =
-            androidx.compose.animation.animateAsState(if (isSelected.value) Color.Red else Color.Transparent)
+//            animateAsState(if (isSelected.value) Color.Red else Color.Transparent)
         Column(modifier = Modifier.padding(16.dp)) {
             val imageModifier = Modifier
                 .preferredHeight(180.dp)
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(4.dp))
-            Image(
-                image,
-                modifier = imageModifier,
-                contentScale = ContentScale.Crop
-            )
+//            Image(
+//                image,
+//                modifier = imageModifier,
+//                contentScale = ContentScale.Crop
+//            )
 
             Spacer(modifier = Modifier.preferredHeight(16.dp))
 
@@ -155,7 +238,7 @@ class MainActivity : AppCompatActivity() {
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .padding(2.dp)
-                    .background(color = backgroundColor.value)
+//                    .background(color = backgroundColor.value)
                     .clickable(onClick = { isSelected.value = (!isSelected.value) })
             )
             Text(text = "Hello $text", style = typography.body2)

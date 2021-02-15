@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AndroidCompose</string>
+    <string name="title_activity_complex_custom_layout">Complex custom layout</string>
 </resources>
