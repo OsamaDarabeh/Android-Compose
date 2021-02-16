@@ -3,25 +3,26 @@ package com.osdar.androidcompose
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.osdar.androidcompose.ui.theme.AndroidComposeTheme
 
 class ComplexCustomLayoutActivity : AppCompatActivity() {
+    @ExperimentalLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidComposeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                    Greeting2()
                 }
             }
         }
@@ -68,10 +69,35 @@ fun Greeting(name: String) {
     }
 }
 
+@ExperimentalLayout
+@Composable
+fun Greeting2(modifier: Modifier = Modifier) {
+    Row(modifier = modifier.preferredHeight(IntrinsicSize.Min)) {
+
+        Text(
+            text = "Os",
+            modifier = Modifier.weight(1f).padding(start = 4.dp).wrapContentWidth(
+                Alignment.Start
+            )
+        )
+        Divider(color = Color.Black, modifier = Modifier.fillMaxHeight().preferredWidth(1.dp))
+        Text(
+            modifier = Modifier
+                .weight(1f)
+
+                .padding(end = 4.dp)
+                .wrapContentWidth(Alignment.End),
+
+            text = "text2"
+        )
+    }
+}
+
+@ExperimentalLayout
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun DefaultPreview( ) {
     AndroidComposeTheme {
-        Greeting("Android")
+        Greeting2()
     }
 }
